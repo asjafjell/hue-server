@@ -8,32 +8,6 @@ const hueHost = '192.168.1.64';
 const apiPath = 'http://' + hueHost + '/api/' + username + '/'
 
 
-function isDimmerUsedRecently({onButton, offButton, moreLightsButton, lessLightsButton}) {
-
-    return (isButtonUsedRecently(onButton) ||
-        isButtonUsedRecently(offButton) ||
-        isButtonUsedRecently(moreLightsButton) ||
-        isButtonUsedRecently(lessLightsButton)
-    );
-}
-
-function isButtonUsedRecently(buttonUrl) {
-    axios
-        .get(buttonUrl)
-        .then(response => {
-            const onClickTriggered = toMoment(response.data.lasttriggered);
-            console.log('Did get button click ' + buttonUrl + ' with success. Clicked at ' + onClickTriggered.toISOString());
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-function toMoment(rawDate) {
-    return moment(Math.floor(new Date(rawDate) / 1000));
-}
-
-/* GET users listing. */
 router.get('/', function (req, res, next) {
     //Create user here
     console.log(req.body);
@@ -47,9 +21,6 @@ router.get('/', function (req, res, next) {
         moreLightsButton: apiPath + 'rules/42',
         lessLightsButton: apiPath + 'rules/43'
     };
-
-    isDimmerUsedRecently(bathroomDimmerSwitch);
-
 
     res.send('Did do bathroom manipulation');
 });

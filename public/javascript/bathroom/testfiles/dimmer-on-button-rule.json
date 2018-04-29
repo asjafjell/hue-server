@@ -1,0 +1,41 @@
+{
+  "name": "Dimmer Switch 19 on0",
+  "owner": "MDME0u4sKQbH7M8FiVhUPl-mk5vDLLxdYFyPA-OS",
+  "created": "2017-11-18T11:14:33",
+  "lasttriggered": "2018-04-27T09:00:00",
+  "timestriggered": 13,
+  "status": "enabled",
+  "recycle": true,
+  "conditions": [
+    {
+      "address": "/sensors/21/state/status",
+      "operator": "lt",
+      "value": "1"
+    },
+    {
+      "address": "/sensors/19/state/buttonevent",
+      "operator": "eq",
+      "value": "1000"
+    },
+    {
+      "address": "/sensors/19/state/lastupdated",
+      "operator": "dx"
+    }
+  ],
+  "actions": [
+    {
+      "address": "/groups/3/action",
+      "method": "PUT",
+      "body": {
+        "scene": "y74kjdnfXh6ygdb"
+      }
+    },
+    {
+      "address": "/sensors/21/state",
+      "method": "PUT",
+      "body": {
+        "status": 1
+      }
+    }
+  ]
+}
