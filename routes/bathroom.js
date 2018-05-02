@@ -3,10 +3,6 @@ const router = express.Router();
 const axios = require("axios");
 const moment = require('moment');
 
-const username = 'cwmUjck9rRqejZFL0Lot43CecLkfhpCKomR3YDZF'
-const hueHost = '192.168.1.64';
-const apiPath = 'http://' + hueHost + '/api/' + username + '/'
-
 
 router.get('/', function (req, res, next) {
     //Create user here
