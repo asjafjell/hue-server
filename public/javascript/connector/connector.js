@@ -34,6 +34,20 @@ async function getLights(){
     return allLights;
 }
 
+async function setLightBrightness(percentage){
+    await hue.lightState.create().brightness(percentage).white();//Bruk white og sett mer fornuftig
+}
+
+async function getRules() {
+    //TODO: Legg til enkel request som henter regler
+}
+
+async function getRemote() {
+    //TODO: Henter ut alle regler for en bryter. Kan generalisere
+    //for alle brytere etter hvert, men først bare for badet :)
+}
+
+
 module.exports.configureBridge = configureBridge;
 module.exports.isBridgeConfigured = isBridgeConfigured;
 module.exports.getLights = getLights;
