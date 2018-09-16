@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var schedule = require('node-schedule');
 
 var indexRouter = require('./routes/index');
 var bathroomRouter = require('./routes/bathroom');
@@ -38,16 +37,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-// scheduling
-app.use(function(err) {
-    schedule.scheduleJob('/10 * * * *', function (fireDate) {
-        console.log('Did something at' + fireDate);
-    });
-});
-
-
-
-
 
 module.exports = app;
