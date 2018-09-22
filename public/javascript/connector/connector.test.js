@@ -16,3 +16,12 @@ describe("Bridge connection", () => {
            expect(lights.lights.length).to.be.at.least(3);
        });
 });
+
+describe("Get groups", () => {
+    it("Can get kitchen group", async () => {
+        const kitchen = await connector.getGroup({groupName: "Kitchen"});
+
+        expect(kitchen.lights.length).to.be.at.least(3);
+
+    })
+});

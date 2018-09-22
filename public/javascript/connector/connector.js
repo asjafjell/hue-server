@@ -29,9 +29,17 @@ async function configureBridge (){
 async function getLights(){
     await configureBridge();
 
-    const allLights = await api.lights();
+    return await api.lights();
+}
 
-    return allLights;
+async function getGroups() {
+    await configureBridge();
+
+    return await api.groups();
+}
+
+async function getGroup({groupName}) {
+    return (await getGroups()).find(k => k.name === groupName);
 }
 
 async function setLightBrightness(percentage){
@@ -51,3 +59,5 @@ async function getRemote() {
 module.exports.configureBridge = configureBridge;
 module.exports.isBridgeConfigured = isBridgeConfigured;
 module.exports.getLights = getLights;
+module.exports.getGroups = getGroups;
+module.exports.getGroup = getGroup;
