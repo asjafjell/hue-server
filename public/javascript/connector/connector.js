@@ -42,8 +42,10 @@ async function getGroup({groupName}) {
     return (await getGroups()).find(k => k.name === groupName);
 }
 
-async function setLightBrightness(percentage){
-    await hue.lightState.create().brightness(percentage).white();//Bruk white og sett mer fornuftig
+async function setLightBrightness({ lightId, percentage,}){
+    const state = hue.lightState.create().white(500, percentage);
+
+    await api.setLightState(lightId, state);
 }
 
 async function getRules() {
@@ -61,3 +63,4 @@ module.exports.isBridgeConfigured = isBridgeConfigured;
 module.exports.getLights = getLights;
 module.exports.getGroups = getGroups;
 module.exports.getGroup = getGroup;
+module.exports.setLightBrightness = setLightBrightness;

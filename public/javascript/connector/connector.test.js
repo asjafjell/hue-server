@@ -17,11 +17,16 @@ describe("Bridge connection", () => {
        });
 });
 
-describe("Get groups", () => {
-    it("Can get kitchen group", async () => {
+describe("Manipulate groups", () => {
+    it("Can get kitchen group and set light to low light", async () => {
         const kitchen = await connector.getGroup({groupName: "Kitchen"});
 
         expect(kitchen.lights.length).to.be.at.least(3);
+
+        kitchen.lights.forEach(function (entry) {
+                connector.setLightBrightness( {lightId: entry, percentage: 15});
+            }
+        );
 
     })
 });
