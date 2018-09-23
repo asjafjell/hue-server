@@ -31,5 +31,5 @@ describe("Manipulate groups", () => {
 
         await connector.setLightBrightnessByGroupName( {groupName: 'Kitchen', percentage: oldBrightness});
 
-    })
+    });
 });

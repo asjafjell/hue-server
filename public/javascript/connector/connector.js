@@ -58,7 +58,7 @@ async function getLightBrightness({groupName}) {
     const group = await getGroup({groupName: groupName});
     const maxBrightness = 254;
 
-    return group.action.bri/maxBrightness*100;
+    return Math.ceil(group.action.bri/maxBrightness*100);
 }
 
 async function getRules() {
