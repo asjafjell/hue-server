@@ -18,15 +18,18 @@ describe("Bridge connection", () => {
 });
 
 describe("Manipulate groups", () => {
-    it("Can get kitchen group and set light to low light", async () => {
-        const kitchen = await connector.getGroup({groupName: "Kitchen"});
+    it("Can get kitchen group and change light percentage", async () => {
+        const oldBrightness = await connector.getLightBrightness({groupName: 'Kitchen'});
+        const newBrightnessPercentage = 50;
 
-        expect(kitchen.lights.length).to.be.at.least(3);
 
-        kitchen.lights.forEach(function (entry) {
-                connector.setLightBrightness( {lightId: entry, percentage: 15});
-            }
-        );
+        await connector.setLightBrightnessByGroupName( {groupName: 'Kitchen', percentage: newBrightnessPercentage});
+
+        const actualBrightness = await connector.getLightBrightness({groupName: 'Kitchen'});
+
+        expect(actualBrightness).to.equal(newBrightnessPercentage);
+
+        await connector.setLightBrightnessByGroupName( {groupName: 'Kitchen', percentage: oldBrightness});
 
     })
 });

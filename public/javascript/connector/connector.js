@@ -42,10 +42,23 @@ async function getGroup({groupName}) {
     return (await getGroups()).find(k => k.name === groupName);
 }
 
-async function setLightBrightness({ lightId, percentage,}){
+async function setLightBrightnessByGroupName({groupName, percentage}) {
+    const group = await getGroup({groupName: groupName});
+
+    return await setLightBrightnessByGroupId({groupId: group.id, percentage});
+}
+
+async function setLightBrightnessByGroupId({groupId, percentage}) {
     const state = hue.lightState.create().white(500, percentage);
 
-    await api.setLightState(lightId, state);
+    await api.setGroupLightState(groupId, state);
+}
+
+async function getLightBrightness({groupName}) {
+    const group = await getGroup({groupName: groupName});
+    const maxBrightness = 254;
+
+    return group.action.bri/maxBrightness*100;
 }
 
 async function getRules() {
@@ -57,10 +70,14 @@ async function getRemote() {
     //for alle brytere etter hvert, men først bare for badet :)
 }
 
+module.exports = {
+    configureBridge: configureBridge,
+    isBridgeConfigured: isBridgeConfigured,
+    getLights: getLights,
+    getGroups: getGroups,
+    getGroup: getGroup,
+    setLightBrightnessByGroupId: setLightBrightnessByGroupId,
+    setLightBrightnessByGroupName: setLightBrightnessByGroupName,
+    getLightBrightness: getLightBrightness,
+};
 
-module.exports.configureBridge = configureBridge;
-module.exports.isBridgeConfigured = isBridgeConfigured;
-module.exports.getLights = getLights;
-module.exports.getGroups = getGroups;
-module.exports.getGroup = getGroup;
-module.exports.setLightBrightness = setLightBrightness;
