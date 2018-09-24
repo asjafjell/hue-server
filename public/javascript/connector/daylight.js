@@ -12,10 +12,11 @@ function tomorrow() {
 }
 
 async function calculateDaylightInPercent({now}) {
-    //Natt:
-    // Timer etter solnedgang i dette døgnet   eller
-    // Timer før soloppgang i samme døgn
-    // 0 % lys
+
+    const isNight = isAfterSunset({date:now}) || !isAfterSunrise({date:now});
+    if(isNight){
+        return 0;
+    }
 
     //Stigende prosent mellom soloppgang og Solar noon
 
@@ -24,6 +25,14 @@ async function calculateDaylightInPercent({now}) {
 
 function getTimes({date}) {
     return suncalc.getTimes(date, oslo.lat, oslo.long);
+}
+
+function isAfterSunset({date}){
+    return date.hours() > moment(getTimes({date}).sunset).hours();
+}
+
+function isAfterSunrise({date}){
+    return date.hours() > moment(getTimes({date}).sunrise).hours();
 }
 
 function nextSunrise({now}) {
@@ -64,5 +73,7 @@ module.exports = {
     getBrightestTimeOfDay: solarNoon,
     nextSunrise,
     nextSunset,
+    isAfterSunset,
+    isAfterSunrise,
     getTimes,
 }
