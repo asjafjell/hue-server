@@ -24,15 +24,32 @@ async function calculateDaylightInPercent({now}) {
 }
 
 function getTimes({date}) {
-    return suncalc.getTimes(date, oslo.lat, oslo.long);
+    const times = suncalc.getTimes(date, oslo.lat, oslo.long);
+
+    return {
+        dawn: moment(times.dawn),
+        dusk: moment(times.dusk),
+        goldenHour: moment(times.goldenHour),
+        goldenHourEnd: moment(times.goldenHourEnd),
+        nadir: moment(times.nadir),
+        nauticalDawn: moment(times.nauticalDawn),
+        nauticalDusk: moment(times.nauticalDusk),
+        night: moment(times.night),
+        nightEnd: moment(times.nightEnd),
+        solarNoon: moment(times.solarNoon),
+        sunrise: moment(times.sunrise),
+        sunriseEnd: moment(times.sunriseEnd),
+        sunset: moment(times.sunset),
+        sunsetStart: moment(times.sunsetStart),
+    };
 }
 
 function isAfterSunset({date}){
-    return date.hours() > moment(getTimes({date}).sunset).hours();
+    return date.hours() > getTimes({date}).sunset.hours();
 }
 
 function isAfterSunrise({date}){
-    return date.hours() > moment(getTimes({date}).sunrise).hours();
+    return date.hours() > getTimes({date}).sunrise.hours();
 }
 
 function nextSunrise({now}) {
@@ -40,17 +57,13 @@ function nextSunrise({now}) {
     const todayTimes = getTimes({date: now});
     const tomorrowTimes = getTimes({date: now.clone().add(1, 'days')});
 
-    const sunriseMoment = moment(todayTimes.sunrise);
+    const sunriseMoment = todayTimes.sunrise;
 
     if (now < sunriseMoment) {
-        return moment(todayTimes.sunrise)
+        return todayTimes.sunrise
     } else {
-        return moment(tomorrowTimes.sunrise);
+        return tomorrowTimes.sunrise;
     }
-}
-
-function solarNoon() {
-    return moment(times.solarNoon);
 }
 
 function nextSunset({now}) {
@@ -61,19 +74,20 @@ function nextSunset({now}) {
         const sunsetMoment = moment(todayTimes.sunset);
 
         if (now < sunsetMoment) {
-            return moment(todayTimes.sunset)
+            return todayTimes.sunset
         } else {
-            return moment(tomorrowTimes.sunset);
+            return tomorrowTimes.sunset;
         }
 }
 
 
 module.exports = {
     calculateDaylightInPercent,
-    getBrightestTimeOfDay: solarNoon,
     nextSunrise,
     nextSunset,
     isAfterSunset,
     isAfterSunrise,
     getTimes,
+    today,
+    tomorrow
 }

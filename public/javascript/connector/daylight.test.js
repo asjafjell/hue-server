@@ -2,6 +2,11 @@ const expect = require('chai').expect;
 const daylight = require('./daylight.js');
 const moment = require('moment');
 
+//
+// moment().toISOString(true) gir nåtid med korrekt tidssone
+// Fint sted å se sol per dato: https://www.timeanddate.com/sun/norway/oslo?month=9&year=2018
+//
+
 describe("Next Sunrise", () => {
     it("Sunrise today if before todays sunrise", async () => {
         const now = moment('2018-09-23T03:00:00+02:00');
@@ -43,7 +48,7 @@ describe("Next Sunset", () => {
 
 
 describe("Is after sunrise", () => {
-    it("After sunrise retuns true", async () => {
+    it("After sunrise returns true", async () => {
         const now = moment('2018-09-23T09:00:00+02:00');
 
         const isAfterSunrise = await daylight.isAfterSunrise({date : now});
@@ -51,7 +56,7 @@ describe("Is after sunrise", () => {
         expect(isAfterSunrise).to.equal(true);
     });
 
-    it("Before sunrise retuns false", async () => {
+    it("Before sunrise returns false", async () => {
         const now = moment('2018-09-23T05:00:00+02:00');
 
         const isAfterSunrise = await daylight.isAfterSunrise({date : now});
@@ -62,7 +67,7 @@ describe("Is after sunrise", () => {
 });
 
 describe("Is after sunset", () => {
-    it("After sunset retuns true", async () => {
+    it("After sunset returns true", async () => {
         const now = moment('2018-09-23T21:00:00+02:00');
 
         const isAfterSunset = await daylight.isAfterSunset({date : now});
@@ -70,7 +75,7 @@ describe("Is after sunset", () => {
         expect(isAfterSunset).to.equal(true);
     });
 
-    it("Before sunset retuns false", async () => {
+    it("Before sunset returns false", async () => {
         const now = moment('2018-09-23T15:00:00+02:00');
 
         const isAfterSunset = await daylight.isAfterSunset({date : now});
@@ -80,7 +85,7 @@ describe("Is after sunset", () => {
 
 });
 
-describe("Light in Percent calculation", () => {
+describe("Light in percent calculation", () => {
     it("Just before sunrise is darkest", async () => {
         const now = moment('2018-09-23T05:00:00+02:00');
 
@@ -97,4 +102,22 @@ describe("Light in Percent calculation", () => {
         expect(daylightPercent).to.equal(0);
     });
 
+    it("Between sunrise and solar noon is 50 percent light", async () => {
+        const sunrise = moment('2018-10-02T07:25:22.696+02:00');
+        const solarNoon = moment('2018-10-02T13:07:37.336+02:00');
+        const difference = solarNoon.diff(sunrise)/2;
+        const middle = sunrise.add(difference, 'milliseconds')
+
+        const daylightPercent = await daylight.calculateDaylightInPercent({now : now});
+
+        expect(daylightPercent).to.equal(50);
+
+
+    });
+
+    it("Between solar noon and sunset is 50 percent light", async () => {
+
+    })
+
 });
+
