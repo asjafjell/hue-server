@@ -105,18 +105,23 @@ describe("Light in percent calculation", () => {
     it("Between sunrise and solar noon is 50 percent light", async () => {
         const sunrise = moment('2018-10-02T07:25:22.696+02:00');
         const solarNoon = moment('2018-10-02T13:07:37.336+02:00');
-        const difference = solarNoon.diff(sunrise)/2;
-        const middle = sunrise.add(difference, 'milliseconds')
+        const difference = solarNoon.diff(sunrise);
+        const middle = sunrise.add(difference / 2, 'milliseconds');
 
-        const daylightPercent = await daylight.calculateDaylightInPercent({now : now});
+        const daylightPercent = await daylight.calculateDaylightInPercent({now: middle});
 
         expect(daylightPercent).to.equal(50);
-
-
     });
 
     it("Between solar noon and sunset is 50 percent light", async () => {
+        const solarNoon = moment('2018-10-02T13:07:37.336+02:00');
+        const sunset = moment('2018-10-02T18:49:51.976+02:00');
+        const difference = sunset.diff(solarNoon);
+        const middle = solarNoon.add(difference / 2, 'milliseconds');
 
+        const daylightPercent = await daylight.calculateDaylightInPercent({now: middle});
+
+        expect(daylightPercent).to.equal(50);
     })
 
 });

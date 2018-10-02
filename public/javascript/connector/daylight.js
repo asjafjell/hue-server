@@ -3,14 +3,6 @@ const moment = require('moment');
 
 const oslo = {lat: 59.9139, long: 10.7522};
 
-function today() {
-    return moment();
-}
-
-function tomorrow() {
-    return moment() + 1;
-}
-
 async function calculateDaylightInPercent({now}) {
 
     const isNight = isAfterSunset({date:now}) || !isAfterSunrise({date:now});
@@ -18,9 +10,20 @@ async function calculateDaylightInPercent({now}) {
         return 0;
     }
 
-    //Stigende prosent mellom soloppgang og Solar noon
+    const times = getTimes({date: now});
 
-    //Synkende prosent mellom Solar noon og solnedgang
+    const isBeforeSolarNoon = !isAfterSolarNoon({date: now});
+    if(isBeforeSolarNoon){
+        const fullDiff = times.solarNoon.diff(times.sunrise);
+        const partDiff = now.diff(times.sunrise);
+
+        return (partDiff/fullDiff)*100;
+    } else {
+        const fullDiff = times.sunset.diff(times.solarNoon);
+        const partDiff = now.diff(times.solarNoon);
+
+        return (partDiff/fullDiff)*100;
+    }
 }
 
 function getTimes({date}) {
@@ -44,13 +47,19 @@ function getTimes({date}) {
     };
 }
 
+function isAfterSunrise({date}){
+    return date.hours() > getTimes({date}).sunrise.hours();
+}
+
+function isAfterSolarNoon({date}){
+    return date.hours() > getTimes({date}).solarNoon.hours();
+}
+
 function isAfterSunset({date}){
     return date.hours() > getTimes({date}).sunset.hours();
 }
 
-function isAfterSunrise({date}){
-    return date.hours() > getTimes({date}).sunrise.hours();
-}
+
 
 function nextSunrise({now}) {
 
@@ -87,7 +96,4 @@ module.exports = {
     nextSunset,
     isAfterSunset,
     isAfterSunrise,
-    getTimes,
-    today,
-    tomorrow
-}
+};
