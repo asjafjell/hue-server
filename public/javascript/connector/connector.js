@@ -24,7 +24,7 @@ async function configureBridge (){
     }
 
     api = new HueApi(bridgeInternalIpAddress, bridgeUsername);
-};
+}
 
 async function getLights(){
     await configureBridge();
@@ -61,16 +61,22 @@ async function getLightBrightness({groupName}) {
     return Math.ceil(group.action.bri/maxBrightness*100);
 }
 
-async function getRules() {
-    //TODO: Legg til enkel request som henter regler
-}
-
-async function getRemote() {
+async function getSensors() {
     //1:  Finn brytere som eksisterer - søk etter node med følgende:
     // "type": "ZLLSwitch"
     //2:  Finn en resourcelink i "resourcelinks" med samme navn som en bryter
     //3:  "links" i resourcelinken har link til alle regler knyttet til en bryter.
-    
+    await configureBridge();
+
+    return await api.sensors();
+}
+
+async function getSwitch({name}) {
+    return (await getSensors()).sensors
+        .find(sensor =>
+            sensor.name === name
+            && sensor.type === "ZLLSwitch"
+        );
 }
 
 module.exports = {
@@ -82,5 +88,6 @@ module.exports = {
     setLightBrightnessByGroupId: setLightBrightnessByGroupId,
     setLightBrightnessByGroupName: setLightBrightnessByGroupName,
     getLightBrightness: getLightBrightness,
+    getSwitch: getSwitch,
 };
 

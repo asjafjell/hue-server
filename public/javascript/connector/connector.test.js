@@ -33,3 +33,14 @@ describe("Manipulate groups", () => {
 
     });
 });
+
+describe("Get remotes", () => {
+    it("Get all buttons", async () => {
+
+        const newVar = await connector.getSwitch({name: "Badet switch"});
+
+        expect(newVar).to.not.be.null;
+
+    });
+});
+
