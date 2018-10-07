@@ -8,18 +8,19 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "^4.16.3",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
-    "mocha": "^5.1.1",
+    "json-query": "^2.2.2",
+    "mocha": "^5.2.0",
     "moment": "^2.22.2",
-    "morgan": "~1.9.0",
+    "morgan": "^1.9.1",
     "node-cron": "^2.0.1",
     "node-hue-api": "^2.4.3",
-    "request": "^2.85.0",
+    "request": "^2.88.0",
     "suncalc": "^1.8.0"
   }
 }

@@ -66,8 +66,11 @@ async function getRules() {
 }
 
 async function getRemote() {
-    //TODO: Henter ut alle regler for en bryter. Kan generalisere
-    //for alle brytere etter hvert, men først bare for badet :)
+    //1:  Finn brytere som eksisterer - søk etter node med følgende:
+    // "type": "ZLLSwitch"
+    //2:  Finn en resourcelink i "resourcelinks" med samme navn som en bryter
+    //3:  "links" i resourcelinken har link til alle regler knyttet til en bryter.
+    
 }
 
 module.exports = {
