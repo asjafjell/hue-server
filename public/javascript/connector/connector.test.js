@@ -37,10 +37,22 @@ describe("Manipulate groups", () => {
 describe("Get remotes", () => {
     it("Get all buttons", async () => {
 
-        const newVar = await connector.getSwitch({name: "Badet switch"});
+        const bathroomSwitch = await connector.getSwitch({name: "Badet switch"});
 
-        expect(newVar).to.not.be.null;
+        expect(bathroomSwitch).to.not.be.null;
 
     });
 });
+
+describe("Get resource links", () => {
+    it("For a switch", async () => {
+
+        const bathroomSwitchRules = await connector.getResourceLinks({name: "Badet switch"});
+
+        expect(bathroomSwitchRules.value.name).to.equal("Badet switch");
+
+    });
+});
+
+
 

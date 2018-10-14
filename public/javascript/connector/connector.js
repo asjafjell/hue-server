@@ -1,5 +1,6 @@
-const hue = require("node-hue-api")
+const hue = require("node-hue-api");
 const HueApi = require("node-hue-api").HueApi;
+const axios = require("axios");
 
 let api;
 
@@ -79,6 +80,22 @@ async function getSwitch({name}) {
         );
 }
 
+async function getResourceLinks({name}) {
+    await configureBridge();
+    const url = 'http://' + bridgeInternalIpAddress + '/api/' + bridgeUsername + '/resourcelinks';
+
+    const resourcesResult = (await axios.get(url)).data;
+    const resourceArray = [];
+
+    for (const key in resourcesResult) {
+        if (resourcesResult.hasOwnProperty(key)) {
+            resourceArray.push({ key: key, value: resourcesResult[key] })
+        }
+    }
+
+    return await resourceArray.find(r => r.value.name === name);
+}
+
 module.exports = {
     configureBridge: configureBridge,
     isBridgeConfigured: isBridgeConfigured,
@@ -89,5 +106,6 @@ module.exports = {
     setLightBrightnessByGroupName: setLightBrightnessByGroupName,
     getLightBrightness: getLightBrightness,
     getSwitch: getSwitch,
+    getResourceLinks
 };
 
