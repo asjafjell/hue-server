@@ -52,6 +52,13 @@ describe("Get resource links", () => {
         expect(bathroomSwitchRules.value.name).to.equal("Badet switch");
 
     });
+
+    it("Get rules triggered just now", async () => {
+        const rulesTriggered = await connector.getRulesTriggered({timespanInMinutes: 1});
+
+        rulesTriggered.every(rule => console.log(rule.key));
+
+    });
 });
 
 

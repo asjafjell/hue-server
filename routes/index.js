@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const scheduler = require('node-cron');
 const moment = require('moment');
-const connector = require('../public/javascript/connector/connector')
+const connector = require('../public/javascript/connector/connector');
 
 
 async function extracted({baseRoomName, roomToAdjustName}) {
@@ -35,6 +35,17 @@ scheduler.schedule('0-59/10 * * * * *', async function () {
     ////////////////////////////////////////////////////////////
 
 
+});
+
+// Get rules triggered the last minute
+scheduler.schedule('0-59/10 * * * * *', async function () {
+    const rulesTriggered = await connector.getRulesTriggered({timespanInMinutes: 1});
+
+    if (rulesTriggered.length > 0) {
+        console.log('Found rules triggered ' + rulesTriggered.map(rule => rule.key).toString());
+    } else {
+        console.log('No rules triggered ...');
+    }
 });
 
 

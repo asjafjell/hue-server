@@ -1,6 +1,8 @@
 const hue = require("node-hue-api");
 const HueApi = require("node-hue-api").HueApi;
-const axios = require("axios");
+const moment = require('moment');
+const hueHelper = require('./philipsHueHelper');
+
 
 let api;
 
@@ -63,10 +65,6 @@ async function getLightBrightness({groupName}) {
 }
 
 async function getSensors() {
-    //1:  Finn brytere som eksisterer - søk etter node med følgende:
-    // "type": "ZLLSwitch"
-    //2:  Finn en resourcelink i "resourcelinks" med samme navn som en bryter
-    //3:  "links" i resourcelinken har link til alle regler knyttet til en bryter.
     await configureBridge();
 
     return await api.sensors();
@@ -82,30 +80,41 @@ async function getSwitch({name}) {
 
 async function getResourceLinks({name}) {
     await configureBridge();
-    const url = 'http://' + bridgeInternalIpAddress + '/api/' + bridgeUsername + '/resourcelinks';
+    const resourcesResult = await hueHelper.getDirectlyFromApi({
+        bridgeInternalIpAddress,
+        bridgeUsername,
+        endpoint: 'resourcelinks'
+    });
 
-    const resourcesResult = (await axios.get(url)).data;
-    const resourceArray = [];
-
-    for (const key in resourcesResult) {
-        if (resourcesResult.hasOwnProperty(key)) {
-            resourceArray.push({ key: key, value: resourcesResult[key] })
-        }
-    }
+    const resourceArray = hueHelper.convertObjectChildrenToList({object: resourcesResult});
 
     return await resourceArray.find(r => r.value.name === name);
+
+}
+
+async function getRulesTriggered({timespanInMinutes}) {
+    await configureBridge();
+    const resourcesResult = await hueHelper.getDirectlyFromApi({
+        bridgeInternalIpAddress,
+        bridgeUsername,
+        endpoint: 'rules'
+    });
+    const resourceArray = hueHelper.convertObjectChildrenToList({object: resourcesResult});
+
+    return resourceArray.filter(r =>
+        hueHelper.convertToMoment({rawPhilipsHueDate: r.value.lasttriggered})
+            .isAfter(moment().subtract(timespanInMinutes, 'minutes'))
+    );
 }
 
 module.exports = {
     configureBridge: configureBridge,
     isBridgeConfigured: isBridgeConfigured,
     getLights: getLights,
-    getGroups: getGroups,
-    getGroup: getGroup,
-    setLightBrightnessByGroupId: setLightBrightnessByGroupId,
     setLightBrightnessByGroupName: setLightBrightnessByGroupName,
     getLightBrightness: getLightBrightness,
     getSwitch: getSwitch,
+    getRulesTriggered: getRulesTriggered,
     getResourceLinks
 };
 
