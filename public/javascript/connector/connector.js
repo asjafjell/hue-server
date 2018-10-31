@@ -112,7 +112,7 @@ module.exports = {
     isBridgeConfigured: isBridgeConfigured,
     getLights: getLights,
     setLightBrightnessByGroupName: setLightBrightnessByGroupName,
-    getLightBrightness: getLightBrightness,
+    getLightBrightness,
     getSwitch: getSwitch,
     getRulesTriggered: getRulesTriggered,
     getResourceLinks
