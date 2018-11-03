@@ -18,7 +18,7 @@ scheduler.schedule('0-59/10 * * * * *', async function () {
     const rulesTriggered = await connector.getRulesTriggered({timespanInMinutes: 1});
 
     if (rulesTriggered.length > 0) {
-        console.log('Found rules triggered ' + rulesTriggered.map(rule => rule.key).toString());
+        //console.log('Found rules triggered ' + rulesTriggered.map(rule => rule.key).toString());
     } else {
     }
 });
