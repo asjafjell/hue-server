@@ -22,7 +22,7 @@ async function calculateDaylightInPercent({now}) {
         const fullDiff = times.sunset.diff(times.solarNoon);
         const partDiff = now.diff(times.solarNoon);
 
-        return Math.round(1 - (partDiff / fullDiff) * 100);
+        return Math.round((1 - partDiff / fullDiff) * 100);
     }
 }
 

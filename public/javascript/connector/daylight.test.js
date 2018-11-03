@@ -124,6 +124,14 @@ describe("Light in percent calculation", () => {
         expect(daylightPercent).to.equal(50);
     });
 
+    it("After solar noon returns positive number", async () => {
+        const now = moment('2018-11-03T13:13:48+01:00');
+
+        const daylightPercent = await daylight.calculateDaylightInPercent({now: now});
+
+        expect(daylightPercent).to.equal(72);
+    });
+
     it("Brightest time of day is 100 percent", async () => {
         const now = moment('2018-11-03T12:01:48+01:00');
 
