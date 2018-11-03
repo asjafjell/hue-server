@@ -8,15 +8,12 @@ async function setLightPercentForGroup({groupName}) {
     const naturalLight = await daylight.calculateDaylightInPercent({now: moment()});
     const baseLight = await connector.getLightBrightness({groupName: 'Livingroom'});
 
-    let nextBrightness = Math.max(naturalLight, baseLight);
+    const minimumValue = 15;
+    let nextBrightness = Math.max(naturalLight, baseLight, minimumValue);
 
     const noBrightnessChanges = currentBrightness === nextBrightness;
-    if(noBrightnessChanges){
+    if (noBrightnessChanges) {
         return;
-    }
-
-    if(nextBrightness === 0){
-        nextBrightness = 15;
     }
 
     await connector.setLightBrightnessByGroupName({
