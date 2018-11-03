@@ -5,24 +5,24 @@ const oslo = {lat: 59.9139, long: 10.7522};
 
 async function calculateDaylightInPercent({now}) {
 
-    const isNight = isAfterSunset({date:now}) || !isAfterSunrise({date:now});
-    if(isNight){
+    const isNight = isAfterSunset({date: now}) || !isAfterSunrise({date: now});
+    if (isNight) {
         return 0;
     }
 
     const times = getTimes({date: now});
 
     const isBeforeSolarNoon = !isAfterSolarNoon({date: now});
-    if(isBeforeSolarNoon){
+    if (isBeforeSolarNoon) {
         const fullDiff = times.solarNoon.diff(times.sunrise);
         const partDiff = now.diff(times.sunrise);
 
-        return (partDiff/fullDiff)*100;
+        return Math.round((partDiff / fullDiff) * 100);
     } else {
         const fullDiff = times.sunset.diff(times.solarNoon);
         const partDiff = now.diff(times.solarNoon);
 
-        return (partDiff/fullDiff)*100;
+        return Math.round(1 - (partDiff / fullDiff) * 100);
     }
 }
 
@@ -47,19 +47,17 @@ function getTimes({date}) {
     };
 }
 
-function isAfterSunrise({date}){
+function isAfterSunrise({date}) {
     return date.hours() > getTimes({date}).sunrise.hours();
 }
 
-function isAfterSolarNoon({date}){
-    return date.hours() > getTimes({date}).solarNoon.hours();
+function isAfterSolarNoon({date}) {
+    return date.diff(getTimes({date}).solarNoon) > 0;
 }
 
-function isAfterSunset({date}){
-    return date.hours() > getTimes({date}).sunset.hours();
+function isAfterSunset({date}) {
+    return date.diff(getTimes({date}).sunset) > 0;
 }
-
-
 
 function nextSunrise({now}) {
 
@@ -77,16 +75,16 @@ function nextSunrise({now}) {
 
 function nextSunset({now}) {
 
-        const todayTimes = getTimes({date: now});
-        const tomorrowTimes = getTimes({date: now.clone().add(1, 'days')});
+    const todayTimes = getTimes({date: now});
+    const tomorrowTimes = getTimes({date: now.clone().add(1, 'days')});
 
-        const sunsetMoment = moment(todayTimes.sunset);
+    const sunsetMoment = moment(todayTimes.sunset);
 
-        if (now < sunsetMoment) {
-            return todayTimes.sunset
-        } else {
-            return tomorrowTimes.sunset;
-        }
+    if (now < sunsetMoment) {
+        return todayTimes.sunset
+    } else {
+        return tomorrowTimes.sunset;
+    }
 }
 
 
@@ -96,4 +94,5 @@ module.exports = {
     nextSunset,
     isAfterSunset,
     isAfterSunrise,
+    times: getTimes
 };
